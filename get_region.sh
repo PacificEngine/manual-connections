@@ -95,7 +95,7 @@ touch /opt/piavpn-manual/latencyList
 MAX_LATENCY=${MAX_LATENCY:-0.05}
 export MAX_LATENCY
 
-serverlist_url='https://serverlist.piaservers.net/vpninfo/servers/v6'
+SERVERLIST_URL="${SERVERLIST_URL:-https://serverlist.piaservers.net/vpninfo/servers/v6}"
 
 # This function checks the latency you have to a specific region.
 # It will print a human-readable message to stderr,
@@ -130,7 +130,11 @@ if [[ -z $VPN_PROTOCOL ]]; then
 fi
 
 # Get all region data
-all_region_data=$(curl -s "$serverlist_url" | head -1)
+if [[ ${SERVERLIST_URL:0:1} == "/" ]]; then
+  all_region_data=$(cat "$SERVERLIST_URL" | head -1)
+else
+  all_region_data=$(curl -s "$SERVERLIST_URL" | head -1)
+fi
 
 # Set the region the user has specified
 selectedRegion=$PREFERRED_REGION
